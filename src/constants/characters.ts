@@ -62,6 +62,8 @@ export const charactersWithTwoClosedStrokes = new Set([
   '8',
   percentSymbolString,
   infinitySymbolString,
+  'ü',
+  'Ü',
 ]);
 
 export const charactersWithThreeClosedStrokes = new Set([perMilSymbolString]);
