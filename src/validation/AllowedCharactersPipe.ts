@@ -11,8 +11,9 @@ export class CountClosedStrokesValidationPipe implements PipeTransform {
       throw new BadRequestException('"text" property must be a string.');
     }
 
-    const text = value.text;
+    const { text } = value;
 
+    const notAllowedCharacters: Set<string> = new Set();
     for (let i = 0; i < value.text.length; i++) {
       const currentCharacter = text[i];
 
@@ -20,12 +21,17 @@ export class CountClosedStrokesValidationPipe implements PipeTransform {
         !lettersAndNumbersRegexp.test(currentCharacter) &&
         !allowedSymbols.has(currentCharacter)
       ) {
-        throw new BadRequestException(
-          `Not allowed character: ${currentCharacter}`,
-        );
+        notAllowedCharacters.add(currentCharacter);
       }
     }
 
-    return value;
+    if (notAllowedCharacters.size > 0) {
+      throw new BadRequestException(
+        `Not allowed character: ${[...notAllowedCharacters].join(', ')}.`,
+      );
+    }
+
+    // sanitizing input
+    return { text };
   }
 }
